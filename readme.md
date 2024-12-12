@@ -10,20 +10,51 @@ npm install msw-higher-order
 
 ## Usage
 
-### withPreResolver
+### buildResolverWrapper
 
-The `withPreResolver` function allows you to add pre-processing logic to your MSW request handlers:
+The `buildResolverWrapper` function allows you to add pre-processing logic to your MSW request handlers:
 
 ```typescript
-import { withPreResolver } from 'msw-higher-order';
+import { buildResolverWrapper } from 'msw-higher-order';
 import { http } from 'msw';
 
 const handler = http.get('/api/resource', 
-  withPreResolver(
+  buildResolverWrapper(
     async ({ request }) => {
       // Pre-processing logic
       if (someCondition) {
         return new Response('Error', { status: 400 });
+      }
+      return undefined; // Continue to main handler
+    },
+    async ({ request }) => {
+      // Main handler logic
+      return new Response('Success');
+    }
+  )
+);
+```
+
+### Zod Validation Example
+
+You can use `buildResolverWrapper` with Zod for request validation:
+
+```typescript
+import { buildResolverWrapper } from 'msw-higher-order';
+import { http } from 'msw';
+import { z } from 'zod';
+
+const schema = z.object({
+  id: z.string().uuid(),
+});
+
+const handler = http.post('/api/resource', 
+  buildResolverWrapper(
+    async ({ request }) => {
+      const body = await request.json();
+      const result = schema.safeParse(body);
+      if (!result.success) {
+        return new Response('Invalid data', { status: 400 });
       }
       return undefined; // Continue to main handler
     },
