@@ -55,11 +55,14 @@ it("works with validation", async () => {
     if (!isHelloWorld(body)) {
       return HttpResponse.text("Invalid body");
     }
+    body
   });
 
   const handler = http.post(
     defaultUrl,
-    withValidation(async () => {
+    withValidation(async ({ request }) => {
+      const body = await request.clone().json();
+      // Unfortunately, body is NOT narrowed down to { hello: "world" } here!
       return HttpResponse.text("hello world");
     })
   );

@@ -4,6 +4,7 @@ import {
   PathParams,
 } from "msw";
 
+/** @deprecated Use `buildResolverWrapper`. */
 export type PreResolverFunction<
   Params extends PathParams<keyof Params> = PathParams,
   RequestBodyType extends DefaultBodyType = DefaultBodyType,
