@@ -17,13 +17,18 @@ type PreResolverFunction<
   | undefined
 >;
 
-/** Higher-order response resolver doing body validation in msw handlers. */
+/** Wraps an `msw` response resolve with more behavior. */
 export const withPreResolver =
   <
     Params extends PathParams<keyof Params> = PathParams,
     RequestBodyType extends DefaultBodyType = DefaultBodyType,
     ResponseBodyType extends DefaultBodyType = DefaultBodyType,
   >(
+    /** 
+     * The logic to execute before calling the main response resolver. Must return either
+     * - `undefined` to continue with the main resolver, or
+     * - a response object to short-circuit the main resolver.
+     */
     preResolver: PreResolverFunction<Params, RequestBodyType, ResponseBodyType>,
     /** The response resolver to be wrapped. */
     resolver: HttpResponseResolver<Params, RequestBodyType, ResponseBodyType>,
