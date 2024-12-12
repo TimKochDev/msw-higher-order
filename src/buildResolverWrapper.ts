@@ -15,9 +15,7 @@ type BuildResolverWrapper = <
   Params extends PathParams = PathParams,
   RequestBodyType extends DefaultBodyType = DefaultBodyType,
   ResponseBodyType extends DefaultBodyType = DefaultBodyType
->(
-    // TODO: here resolver args
-) => (
+> (
   resolver: HttpResponseResolver<Params, RequestBodyType, ResponseBodyType>
 ) => HttpResponseResolver<
   Params,
@@ -27,7 +25,6 @@ type BuildResolverWrapper = <
 
 export const buildResolverWrapper: BuildResolverWrapper =
   (wrapperFn) =>
-  () =>
   (resolver) =>
   async (...resolverArgs) => {
     const earlyResponse = await wrapperFn();

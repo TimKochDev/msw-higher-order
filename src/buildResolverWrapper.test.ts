@@ -19,7 +19,7 @@ afterAll(() => {
 });
 
 it("Works with simple delay", async () => {
-  const withDelay = buildResolverWrapper(async () => await delay(200))();
+  const withDelay = buildResolverWrapper(async () => await delay(200))
 
   const handler = http.get(
     defaultUrl,
@@ -32,7 +32,7 @@ it("Works with simple delay", async () => {
 it("TEMP: Even without access to request object, short-circuit responses work", async () => {
   const withDelay = buildResolverWrapper(async () =>
     HttpResponse.text("pre")
-  )();
+  )
 
   const handler = http.get(
     defaultUrl,
