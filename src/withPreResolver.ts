@@ -4,10 +4,10 @@ import {
   PathParams,
 } from "msw";
 
-type PreResolverFunction<
-  Params extends PathParams<keyof Params>,
-  RequestBodyType extends DefaultBodyType,
-  ResponseBodyType extends DefaultBodyType,
+export type PreResolverFunction<
+  Params extends PathParams<keyof Params> = PathParams,
+  RequestBodyType extends DefaultBodyType = DefaultBodyType,
+  ResponseBodyType extends DefaultBodyType = DefaultBodyType,
 > = (
   props: Parameters<
     HttpResponseResolver<Params, RequestBodyType, ResponseBodyType>
