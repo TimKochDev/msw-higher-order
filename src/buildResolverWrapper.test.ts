@@ -2,7 +2,6 @@ import { afterAll, beforeAll, beforeEach, expect, it } from "vitest";
 import { buildResolverWrapper } from "./buildResolverWrapper";
 import { delay, http, HttpResponse } from "msw";
 import { setupServer } from "msw/node";
-import { aw } from "vitest/dist/chunks/reporters.D7Jzd9GS.js";
 
 const server = setupServer();
 const defaultUrl = "http://localhost";
@@ -20,13 +19,11 @@ afterAll(() => {
 });
 
 it("Works with simple delay", async () => {
-  const withDelay = buildResolverWrapper(async (ms: number) => await delay(ms))(
-    200
-  );
+  const withDelay = buildResolverWrapper(async () => await delay(200))();
 
   const handler = http.get(
     defaultUrl,
-    withDelay(({ request }) => HttpResponse.text("hello world"))
+    withDelay(() => HttpResponse.text("hello world"))
   );
   server.use(handler);
   expect((await fetch(defaultUrl)).status).toBe(200);
@@ -39,7 +36,7 @@ it("TEMP: Even without access to request object, short-circuit responses work", 
 
   const handler = http.get(
     defaultUrl,
-    withDelay(({ request }) => HttpResponse.text("hello world"))
+    withDelay(() => HttpResponse.text("hello world"))
   );
   server.use(handler);
   const response = await fetch(defaultUrl);

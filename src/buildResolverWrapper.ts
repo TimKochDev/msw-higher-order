@@ -2,7 +2,6 @@ import {
   PathParams,
   DefaultBodyType,
   HttpResponseResolver,
-  HttpResponse,
 } from "msw";
 
 type BuildResolverWrapper = <
@@ -11,13 +10,13 @@ type BuildResolverWrapper = <
   RequestBodyType extends DefaultBodyType = DefaultBodyType,
   WrapperResponse extends DefaultBodyType = DefaultBodyType
 >(
-  wrapperFn: (...args: WrapperArgs) => Promise<void> | void | ReturnType<HttpResponseResolver<Params, RequestBodyType, WrapperResponse>>,
+  wrapperFn: () => Promise<void> | void | ReturnType<HttpResponseResolver<Params, RequestBodyType, WrapperResponse>>,
 ) => <
   Params extends PathParams = PathParams,
   RequestBodyType extends DefaultBodyType = DefaultBodyType,
   ResponseBodyType extends DefaultBodyType = DefaultBodyType
 >(
-  ...wrapperArgs: WrapperArgs
+    // TODO: here resolver args
 ) => (
   resolver: HttpResponseResolver<Params, RequestBodyType, ResponseBodyType>
 ) => HttpResponseResolver<
@@ -28,10 +27,10 @@ type BuildResolverWrapper = <
 
 export const buildResolverWrapper: BuildResolverWrapper =
   (wrapperFn) =>
-  (...wrapperArgs) =>
+  () =>
   (resolver) =>
   async (...resolverArgs) => {
-    const earlyResponse = await wrapperFn(...wrapperArgs);
+    const earlyResponse = await wrapperFn();
     if (earlyResponse) return earlyResponse;
     return resolver(...resolverArgs);
   };
