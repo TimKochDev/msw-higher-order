@@ -2,6 +2,11 @@
 
 Higher-order functions for MSW request handlers.
 
+> [!CAUTION]
+> I started this project after opening [this discussion](https://github.com/mswjs/msw/discussions/2392) on the MSW repository.
+> However, since I learned that you can _throw_ mocked responses in MSW resolvers, higher-order functions look less useful in comparison.
+> This is why I am archiving this project for now.
+
 ## Installation
 
 ```bash
